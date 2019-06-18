@@ -1,12 +1,12 @@
 # SmartHotel 360 on Aks (with windows Containers)
 
-This tutorial is a starting point for deploy the SmartHotel 360 Registration in an AKS with Windows nodes.
+This tutorial is a starting point for deploying the SmartHotel 360 Registration in an AKS with Windows nodes.
 
 ![aks on SmartHotel](images/workingonaks.png)
 
 ## Building the AKS
 
-First step is configure and enable the AKS Cluster ready for windows, for doing this, you have to follow this steps:
+First step is to configure and enable the AKS Cluster, making it ready for windows. To do this, you have to follow these steps:
 ### Install aks-preview CLI extension
 
 The CLI commands to create and manage multiple node pools are available in the aks-preview CLI extension. Install the aks-preview Azure CLI extension using the az extension add command, as shown in the following example:
@@ -16,7 +16,7 @@ The CLI commands to create and manage multiple node pools are available in the a
 If you've previously installed the aks-preview extension, install any available updates using the az extension update ```--name aks-preview``` command.
 
 ### Register Windows preview feature
-To create an AKS cluster that can use multiple node pools and run Windows Server containers, first enable the WindowsPreview feature flags on your subscription. The WindowsPreview feature also uses multi-node pool clusters and virtual machine scale set to manage the deployment and configuration of the Kubernetes nodes. Register the WindowsPreview feature flag using the az feature register command as shown in the following example:
+To create an AKS cluster that can use multiple node pools and run Windows Server containers, first enable the WindowsPreview feature flags on your subscription. The WindowsPreview feature also uses multi-node pool clusters and virtual machine scale. These are set to manage the deployment and configuration of the Kubernetes nodes. Register the WindowsPreview feature flag using the az feature register command, as shown in the following example:
 
 ```az feature register --name WindowsPreview --namespace Microsoft.ContainerService ```
  
@@ -65,7 +65,7 @@ The following example output shows the resource group created successfully:
 ### Create AKS cluster
 In order to run an AKS cluster that supports node pools for Windows Server containers, your cluster needs to use a network policy that uses Azure CNI (advanced) network plugin. For more detailed information to help plan out the required subnet ranges and network considerations, see configure Azure CNI networking. Use the az aks create command to create an AKS cluster named myAKSCluster. This command will create the necessary network resources if they don't exist.
 
-The cluster is configured with one node
+The cluster is configured with one node.
 The windows-admin-password and windows-admin-username parameters set the admin credentials for any Windows Server containers created on the cluster.
 Provide your own secure PASSWORD_WIN.
 
@@ -117,23 +117,23 @@ To verify the connection to your cluster, use the kubectl get command to return 
 
 ## Setting up an AKS Cluster with Windows Machines
 
-for installing this application you need to have helm installed on your local machine and in your kubernetes cluster. You can achieve this following these instructions:
+To install this application you need to have helm installed on your local machine and in your kubernetes cluster. You can achieve this following these instructions:
 
 ## Download and install helm
 
-You can download from their releases page on github or install vía chocolatey package manager:
+You can download helm from their releases page on github or install vía chocolatey package manager:
 
 ```$ choco install kubernetes-helm```
 
 After that you can install helm going to the folder ```Deploy\k8s``` and type this commands:
 
 ```$ kubectl apply -f tiller-rbac.yaml```
-this registrates tiller account and role for working in the cluster and :
+this registers a tiller account and role for working in the cluster and :
 ```$ helm init --node-selectors "beta.kubernetes.io/os"="linux" --service-account tiller ```
 
 This installs helm on the cluster, in the linux nodes (helm pods are linux pods, you have to install this tooling in the linux nodes).
 
-Now it's time to setup the ingress controller. This controller has the responsability of route the traffic to the appropiate pod, you can setup this doing:
+Now it's time to setup the ingress controller. This controller has the responsibility to route the traffic to the appropiate pod. You can set this up, doing:
 
 ```
 helm install stable/nginx-ingress \ 
@@ -145,10 +145,10 @@ helm install stable/nginx-ingress \
 ```
     
 
-Once time you have completed this stage, you can install the application executing the powershell script:
+Once you have completed this stage, you can install the application executing the powershell script:
 
 ```> deploy.ps1 -dnsname yourawesomednsname```
 
->Note there is a parameter call ```dnsname```, this is the dns name of your aks cluster. With this script it associates the dns name to the nginx/ingress controller, if you dont pass a value to this parameter, or you don't setup, it will try to register the dnsname _smhotel360win_
+>Note there is a parameter call ```dnsname```, this is the dns name of your aks cluster. With this script it associates the dns name to the nginx/ingress controller, if you dont pass a value to this parameter, or if you don't set it up, it will try to register the dnsname _smhotel360win_
 
 ![pods working](images/pods_working.png)
